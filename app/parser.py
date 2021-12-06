@@ -4,8 +4,12 @@ import numpy as np
 import json
 from pathlib import Path
 
-from app.utilities import save_dict
+from utilities import save_dict
 
+
+
+    
+    
 
 def get_time_series(pml_path):
     """ets the time_series of the dynophore from the pml file
@@ -16,16 +20,32 @@ def get_time_series(pml_path):
     Returns:
         [dictionary, JSON]: returns the time series for each superfeature as a JSON file
     """
+    
+    save_path = parse_file_path(pml_path)
 
     tree = ET.parse(pml_path)
     root = tree.getroot()
     time_series = {}
+    cartesian_traj = {}
+    centroids = {}
     for child in root:
         i = 0
         frames = []
+        coordinates = []
+
         for attributes in child:
-            if i > 0:  # first entry does not provide frameIndex information
+            if i == 0:
+                x = float(attributes.get("x3"))
+                y = float(attributes.get("y3"))
+                z = float(attributes.get("z3"))
+                centre = [x, y, z]
+            else:# first entry does not provide frameIndex information
                 frame_idx = int(attributes.get("frameIndex"))
+                x = float(attributes.get("x3"))
+                y = float(attributes.get("y3"))
+                z = float(attributes.get("z3"))
+                coordinates.append([x, y, z])
+                
                 frames.append(frame_idx)
                 if i == 1:  # get the value of the last frameIndex
                     max_index = frame_idx + 1  # counting in python starts at 0
@@ -33,11 +53,16 @@ def get_time_series(pml_path):
                     max_index = frame_idx + 1
             i += 1
         time_series[child.get("id")] = frames
+        cartesian_traj[child.get("id")] = coordinates
+        centroids[child.get("id")] = centre
+    cartesian_full_traj = {}
+    cartesian_full_traj["centroids"] = centroids
+    cartesian_full_traj["cartesian"] = cartesian_traj
+    save_dict(cartesian_full_traj, save_path=save_path, name="cartesian")
     time_series["num_frames"] = max_index
-    print("Max features is:", max_index)
     time_series = rewrites_time_series(time_series)
-    save_path = parse_file_path(pml_path)
-    save_dict(time_series, save_path)
+    
+    save_dict(time_series, save_path=save_path)
     return time_series
 
 
@@ -125,4 +150,4 @@ def get_name(path):
 
 if __name__ == "__main__":
     #get_time_series("../Trajectories/Dominique/1KE7_dynophore.json")
-    get_time_series("../dynophores-master/dynophores/tests/data/out/1KE7_dynophore.pml")
+    get_time_series("/Users/julian/Desktop/Uni/CompSci/4Semester/DFT/Project/dylightful/tests/Trajectories/1KE7_dynophore.pml")

@@ -4,6 +4,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 .DS_STORE
+*pml
+*pdb
+*csv
+*json
+*cgo 
+*dcd
 # C extensions
 *.so
 
