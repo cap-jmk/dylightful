@@ -4,7 +4,7 @@ import numpy as np
 import json
 from pathlib import Path
 
-from utilities import save_dict
+from app.utilities import save_dict
 
 
 def get_time_series(pml_path):
