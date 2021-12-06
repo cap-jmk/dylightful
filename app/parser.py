@@ -150,4 +150,4 @@ def get_name(path):
 
 if __name__ == "__main__":
     #get_time_series("../Trajectories/Dominique/1KE7_dynophore.json")
-    get_time_series("/Users/julian/Desktop/Uni/CompSci/4Semester/DFT/Project/dylightful/tests/Trajectories/1KE7_dynophore.pml")
+    get_time_series("../tests/1KE7_dynophore.pml")
