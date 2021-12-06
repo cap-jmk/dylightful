@@ -1,8 +1,16 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+*.pirc
 *.py[cod]
 *$py.class
 .DS_STORE
+*pml
+*pdb
+*csv
+*json
+*cgo 
+*dcd
+*png
 # C extensions
 *.so
 
