@@ -8,4 +8,4 @@ class MSM:
     raise NotImplementedError
 
     def train_discretizer(): 
-        
+        pass

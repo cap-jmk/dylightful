@@ -2,9 +2,9 @@ import os
 import xml.etree.ElementTree as ET
 import numpy as np
 import json
-from pathlib import Path
 
-from utilities import save_dict
+
+from dylightful.utilities import save_dict, parse_file_path
 
 
 
@@ -113,41 +113,9 @@ def rewrites_time_series(feature_series):
     return feature_series
 
 
-def parse_file_path(path):
-    """Automatically generates an output path for the time trajectory
 
-    Args:
-        path ([type]): Dynophore input path
-    """
-    return get_dir(path) + "/" + get_name(path)
-
-
-def get_dir(path):
-    """Automatically extracts the path to the dynophore trajectory
-
-    Args:
-        path (str): File path to the dynophore trajectory
-
-    Returns:
-        str: /some/file/path
-    """
-    dir_path = os.path.dirname(os.path.realpath(path))
-    return dir_path
-
-
-def get_name(path):
-    """ Gets the name of the dynophore trajectory without the .pml extension
-
-    Args:
-        path (str): File path to the dynophore trajectory
-
-    Returns:
-        str: dynophore_pml
-    """
-    file = Path(path).stem
-    return file
 
 
 if __name__ == "__main__":
     #get_time_series("../Trajectories/Dominique/1KE7_dynophore.json")
-    get_time_series("../tests/1KE7_dynophore.pml")
+    get_time_series("../tests/Trajectories/1KE7_dynophore.pml")
