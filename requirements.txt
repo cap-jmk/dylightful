@@ -5,3 +5,4 @@ deeptime
 torch 
 torchvision 
 torchaudio
+matplotlib
