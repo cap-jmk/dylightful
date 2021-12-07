@@ -1,3 +1,7 @@
 pandas
 scikit-learn
 hmmlearn
+deeptime
+torch 
+torchvision 
+torchaudio
