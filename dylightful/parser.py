@@ -7,10 +7,6 @@ import json
 from dylightful.utilities import save_dict, parse_file_path
 
 
-
-    
-    
-
 def get_time_series(pml_path):
     """ets the time_series of the dynophore from the pml file
 
@@ -20,7 +16,7 @@ def get_time_series(pml_path):
     Returns:
         [dictionary, JSON]: returns the time series for each superfeature as a JSON file
     """
-    
+
     save_path = parse_file_path(pml_path)
 
     tree = ET.parse(pml_path)
@@ -39,17 +35,17 @@ def get_time_series(pml_path):
                 y = float(attributes.get("y3"))
                 z = float(attributes.get("z3"))
                 centre = [x, y, z]
-            else:# first entry does not provide frameIndex information
+            else:  # first entry does not provide frameIndex information
                 frame_idx = int(attributes.get("frameIndex"))
                 x = float(attributes.get("x3"))
                 y = float(attributes.get("y3"))
                 z = float(attributes.get("z3"))
                 coordinates.append([x, y, z])
-                
+
                 frames.append(frame_idx)
                 if i == 1:  # get the value of the last frameIndex
                     max_index = frame_idx + 1  # counting in python starts at 0
-                elif max_index < frame_idx +1:
+                elif max_index < frame_idx + 1:
                     max_index = frame_idx + 1
             i += 1
         time_series[child.get("id")] = frames
@@ -61,7 +57,7 @@ def get_time_series(pml_path):
     save_dict(cartesian_full_traj, save_path=save_path, name="cartesian")
     time_series["num_frames"] = max_index
     time_series = rewrites_time_series(time_series)
-    
+
     save_dict(time_series, save_path=save_path)
     return time_series
 
@@ -84,38 +80,40 @@ def rewrites_time_series(feature_series):
         try:
             for frame_index in time_ser_feat:
                 try:
-                    if frame_index<len(new_time_ser):
+                    if frame_index < len(new_time_ser):
                         new_time_ser[int(frame_index)] = 1
-                        if max_frames < frame_index: 
-                            max_frames = int(frame_index) #if something with the frame_index is wrong set it here
+                        if max_frames < frame_index:
+                            max_frames = int(
+                                frame_index
+                            )  # if something with the frame_index is wrong set it here
                             print("Set max frames to", frame_index)
                     else:
-                        tmp = np.zeros(int(frame_index+50)) #free new memory
-                        tmp[:len(new_time_ser)] = new_time_ser
+                        tmp = np.zeros(int(frame_index + 50))  # free new memory
+                        tmp[: len(new_time_ser)] = new_time_ser
                         tmp[int(frame_index)] = 1
-                        new_time_ser = tmp 
+                        new_time_ser = tmp
                 except:
                     print(
                         "Error parsing into new time series in superfeature, ",
                         keys[i],
-                        "in frame", 
+                        "in frame",
                         frame_index,
                         "but the memory was only",
                         len(new_time_ser),
-                        "time points"
+                        "time points",
                     )
                     continue
-        except: 
-            raise RuntimeError("Fatal error while parsing superfeature",keys[i])
+        except:
+            raise RuntimeError("Fatal error while parsing superfeature", keys[i])
         new_time_ser = new_time_ser[:max_frames]
-        assert len(new_time_ser) == max_frames, "Lengths of parsed time series does not match the maximum number of frames. Length was"+str(len(new_time_ser))
+        assert len(new_time_ser) == max_frames, (
+            "Lengths of parsed time series does not match the maximum number of frames. Length was"
+            + str(len(new_time_ser))
+        )
         feature_series[keys[i]] = new_time_ser.astype(np.int32).tolist()
     return feature_series
 
 
-
-
-
 if __name__ == "__main__":
-    #get_time_series("../Trajectories/Dominique/1KE7_dynophore.json")
+    # get_time_series("../Trajectories/Dominique/1KE7_dynophore.json")
     get_time_series("../tests/Trajectories/1KE7_dynophore.pml")

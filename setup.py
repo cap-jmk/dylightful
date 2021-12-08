@@ -9,12 +9,6 @@ setup(
     author_email="julian.m.kleber@gmail.com",
     license="MIT",
     packages=["app"],
-    install_requires=[
-          'numpy',
-          'pandas',
-          'matplotlib',
-          'tqdm',
-          'hmmlearn'
-      ],
+    install_requires=["numpy", "pandas", "matplotlib", "tqdm", "hmmlearn"],
     zip_safe=False,
 )
