@@ -1,1 +1,1 @@
-import click
+zimport click

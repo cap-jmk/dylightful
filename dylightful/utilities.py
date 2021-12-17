@@ -84,7 +84,7 @@ def get_dir(path):
 
 
 def get_name(path):
-    """ Gets the name of the dynophore trajectory without the .pml extension
+    """Gets the name of the dynophore trajectory without the .pml extension
 
     Args:
         path (str): File path to the dynophore trajectory

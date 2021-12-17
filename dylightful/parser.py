@@ -66,7 +66,7 @@ def rewrites_time_series(feature_series):
     """Convertes to a sparse time series to be ready for the HMM processing
 
     Args:
-        feature_series (np.array): 
+        feature_series (np.array):
 
     Returns:
         dictionionary, JSON: JSON with the time series per superfeature

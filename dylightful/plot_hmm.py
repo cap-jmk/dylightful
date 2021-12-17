@@ -22,7 +22,7 @@ def plot_state_diagram(probabilities, max_states=15, file_name=None, save_path=N
 
 
 def plot_transmat_map(trans_mat, file_name=None, save_path=None):
-    """State transition matrix visualised as a heatmap 
+    """State transition matrix visualised as a heatmap
 
     Args:
         trans_mat ([type]): [description]

@@ -7,7 +7,8 @@ from dylightful.utilities import make_name
 
 
 def create_msm(trajectory, prefix=None, save_path=None):
-
+    plt.cla()
+    plt.clf()
     name = "_msm_transistion_matrix.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
 
@@ -19,7 +20,7 @@ def create_msm(trajectory, prefix=None, save_path=None):
 
     msm = estimator.fit(counts).fetch_model()
     ax = sns.heatmap(msm.transition_matrix)
-    fig = ax.figure()
+    fig = ax.get_figure()
     plt.xlabel("State")
     plt.ylabel("State")
     plt.savefig(file_name, dpi=300)

@@ -1,6 +1,5 @@
 class Analyzer:
-    """Base class for HMM analysis
-    """
+    """Base class for HMM analysis"""
 
     def __init__(self) -> None:
         pass

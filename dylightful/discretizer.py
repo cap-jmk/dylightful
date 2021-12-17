@@ -56,11 +56,24 @@ def tae_discretizer(
     tae.fit(loader_train, n_epochs=50, validation_loader=loader_val)
     tae_model = tae.fetch_model()
     proj = tae_model.transform(time_ser)
-    plot_tae_training(tae_model=tae, prefix=prefix, save_path=save_path)
-    plot_tae_transform(proj=proj, prefix=prefix, save_path=save_path)
-    find_states_kmeans(
-        proj=proj, prefix=prefix, save_path=save_path, num_cluster=num_cluster, tol=tol
-    )
+    try:
+        plot_tae_training(tae_model=tae, prefix=prefix, save_path=save_path)
+    except:
+        print("Did not plot the TAE training.")
+    try:
+        plot_tae_transform(proj=proj, prefix=prefix, save_path=save_path)
+    except:
+        print("Did not plot the TAE transform.")
+    try:
+        find_states_kmeans(
+            proj=proj,
+            prefix=prefix,
+            save_path=save_path,
+            num_cluster=num_cluster,
+            tol=tol,
+        )
+    except:
+        print("Did not plot ellbow")
     return proj
 
 
@@ -79,7 +92,7 @@ def smooth_projection_k_means(arr, num_cluster):
 
 
 def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
-    """Cluster the projection to get realy discretized values necessary for the MSM 
+    """Cluster the projection to get realy discretized values necessary for the MSM
 
     Args:
         proj ([type]): [description]
@@ -110,6 +123,8 @@ def plot_tae_training(tae_model, prefix=None, save_path=None):
         file_name ([type], optional): [description]. Defaults to None.
         save_path ([type], optional): [description]. Defaults to None.
     """
+    plt.clf()
+    plt.cla()
     name = "_tae_training.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.semilogy(*tae_model.train_losses.T, label="train")
@@ -118,7 +133,7 @@ def plot_tae_training(tae_model, prefix=None, save_path=None):
     plt.ylabel("Loss")
     plt.legend()
     plt.savefig(file_name, dpi=300)
-    plt.clf()
+
     return None
 
 
@@ -131,6 +146,8 @@ def plot_tae_transform(proj, num_steps=1000, prefix=None, save_path=None):
         file_name ([type], optional): [description]. Defaults to None.
         save_path ([type], optional): [description]. Defaults to None.
     """
+    plt.clf()
+    plt.cla()
     name = "_tae_transform.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.ylabel("State")
@@ -141,7 +158,6 @@ def plot_tae_transform(proj, num_steps=1000, prefix=None, save_path=None):
         plt.plot(proj[:num_steps])
     plt.legend()
     plt.savefig(file_name, dpi=300)
-    plt.clf()
 
 
 def plot_scores_kmeans(metric, prefix=None, save_path=None):
@@ -155,6 +171,8 @@ def plot_scores_kmeans(metric, prefix=None, save_path=None):
     Returns:
         None
     """
+    plt.clf()
+    plt.cla()
     name = "_scores_kmeans.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.xlabel("Number of cluster")
@@ -167,7 +185,7 @@ def plot_scores_kmeans(metric, prefix=None, save_path=None):
 
 def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
     """Plots the sum of squared distances for K-Means to do the ellbow method visually
-    
+
 
     Args:
         sum_of_squared_distances ([type]): [description]
@@ -177,12 +195,13 @@ def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
     Returns:
         None
     """
+    plt.clf()
+    plt.cla()
     name = "_ellbow_kMeans.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.xlabel("Number of cluster")
     plt.ylabel("Sum of squared distances $R$")
     plt.plot(metric[1:])
     plt.savefig(file_name, dpi=300)
-    plt.clf()
     print("Saved", file_name)
     return None
