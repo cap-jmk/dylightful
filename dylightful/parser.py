@@ -8,7 +8,7 @@ from dylightful.utilities import save_dict, parse_file_path
 
 
 def get_time_series(pml_path):
-    """ets the time_series of the dynophore from the pml file
+    """gets the time_series of the dynophore from the pml file
 
     Args:
         pml_path (str): path to the pml file containing the Dynophore trajectory

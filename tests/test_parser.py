@@ -7,7 +7,7 @@ dirname = os.path.dirname(__file__)
 
 
 @pytest.mark.parametrize(
-    "traj_path", [("Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore.pml")]
+    "traj_path", [("Trajectories/HIVProtease/HIVPro-DMP_dynophore.pml")]
 )
 def test_dynoparser(traj_path):
     traj_path = os.path.join(dirname, traj_path)

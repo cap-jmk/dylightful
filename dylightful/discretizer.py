@@ -108,6 +108,7 @@ def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
         sum_of_squared_distances[i] = clf.inertia_
     # clf = KMeans(n_clusters=3, random_state=random_state).fit(proj)
     # labels = clf.labels_
+    # TODO:Implement relative metric
     plot_ellbow_kmeans(
         metric=sum_of_squared_distances, prefix=prefix, save_path=save_path
     )
@@ -201,7 +202,7 @@ def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.xlabel("Number of cluster")
     plt.ylabel("Sum of squared distances $R$")
-    plt.plot(metric[1:])
+    plt.plot(np.arange(1, len(metric) + 1, 1), metric[1:])
     plt.savefig(file_name, dpi=300)
     print("Saved", file_name)
     return None
