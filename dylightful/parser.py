@@ -7,6 +7,8 @@ import json
 from dylightful.utilities import save_dict, parse_file_path
 
 
+
+
 def get_time_series(pml_path):
     """gets the time_series of the dynophore from the pml file
 
@@ -113,7 +115,44 @@ def rewrites_time_series(feature_series):
         feature_series[keys[i]] = new_time_ser.astype(np.int32).tolist()
     return feature_series
 
+def get_atom_serials(pml_path):
+    
+    
+    save_path = parse_file_path(pml_path)
 
+    tree = ET.parse(pml_path)
+    root = tree.getroot()
+    for child in root: 
+        print(child)
+        
+def load_env_partners(json_path): 
+    """Generates the env_partners with occurences from the corresponding json
+
+    Args:
+        json_path ([type]): [description]
+    """
+    
+
+
+    with open(json_path) as jsonFile:
+        jsonObject = json.load(jsonFile)
+        jsonFile.close()
+    num_features = len(jsonObject["superfeatures"])
+    storage_env_partners = {}
+    for i in range(num_features):
+        env_partners = jsonObject["superfeatures"][i]["envpartners"]
+        
+        for env_partner in env_partners:
+            name = env_partner["name"]
+            storage_env_partners[name +":superFeature"+str(i)]= env_partner["occurrences"]
+            #occ = env_partner["occurrences"]
+            #print(type(occ))
+            #ind_occ = np.where(occ == 1)
+            #print(name, ind_occ)
+    return storage_env_partners  
+            
 if __name__ == "__main__":
     # get_time_series("../Trajectories/Dominique/1KE7_dynophore.json")
-    get_time_series("../tests/Trajectories/1KE7_dynophore.pml")
+    #get_time_series("../tests/Trajectories/1KE7_dynophore.pml")
+    #get_atom_serials(pml_path="../tests/Trajectories/1KE7_dynophore.pml")
+    get_env_partners(json_path="../tests/Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore.json")
