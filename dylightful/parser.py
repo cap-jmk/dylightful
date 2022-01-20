@@ -2,7 +2,7 @@ import os
 import xml.etree.ElementTree as ET
 import numpy as np
 import json
-
+import sys
 
 from dylightful.utilities import save_dict, parse_file_path
 
@@ -124,7 +124,7 @@ def get_atom_serials(pml_path):
         print(child)
 
 
-def load_env_partners(json_path):
+def load_env_partners_mixed(json_path):
     """Generates the env_partners with occurences from the corresponding json
 
     Args:
@@ -147,10 +147,35 @@ def load_env_partners(json_path):
     return storage_env_partners
 
 
+def load_env_partners(json_path):
+    """Generates the env_partners with occurences from the corresponding json
+
+    Args:
+        json_path ([type]): [description]
+    """
+
+    with open(json_path) as jsonFile:
+        jsonObject = json.load(jsonFile)
+        jsonFile.close()
+    num_features = len(jsonObject["superfeatures"])
+    storage_env_partners = {}
+    for i in range(num_features):
+        env_partners = jsonObject["superfeatures"][i]["envpartners"]
+
+        for env_partner in env_partners:
+            name = env_partner["name"]
+            storage_env_partners[name] = []
+        for env_partner in env_partners:
+            name = env_partner["name"]
+            storage_env_partners[name].append(env_partner["occurrences"])
+    return storage_env_partners
+
+
 if __name__ == "__main__":
     # get_time_series("../Trajectories/Dominique/1KE7_dynophore.json")
     # get_time_series("../tests/Trajectories/1KE7_dynophore.pml")
     # get_atom_serials(pml_path="../tests/Trajectories/1KE7_dynophore.pml")
-    get_env_partners(
+    res = load_env_partners(
         json_path="../tests/Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore.json"
     )
+    print(res)
