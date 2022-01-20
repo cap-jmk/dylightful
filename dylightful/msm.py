@@ -59,11 +59,13 @@ def fit_msm(trajectory, prefix=None, save_path=None):
 
 
 def map_pharmacophore_states(labels, parsed_states):
-    
+
     pass
 
-if __name__ == '__main__':
-    traj = "../tests/Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore_time_series.json"
-    
-    parsed_states = 
-    labels = build_tae_msm(traj_path, num_states)
+
+if __name__ == "__main__":
+    # traj = "../tests/Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore_time_series.json"
+
+    # parsed_states =
+    # labels = build_tae_msm(traj_path, num_states)
+    pass

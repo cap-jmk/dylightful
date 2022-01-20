@@ -144,10 +144,6 @@ def load_env_partners(json_path):
             storage_env_partners[name + ":superFeature" + str(i)] = env_partner[
                 "occurrences"
             ]
-            # occ = env_partner["occurrences"]
-            # print(type(occ))
-            # ind_occ = np.where(occ == 1)
-            # print(name, ind_occ)
     return storage_env_partners
 
 

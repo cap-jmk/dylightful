@@ -1,19 +1,65 @@
-import numpy as np 
+import numpy as np
+from numpy.lib.arraysetops import unique
+import json
+import pandas as pd
+
+from dylightful.parser import load_env_partners
+from dylightful.utilities import parse_file_path, make_name
+
+# TODO: Finish refactoring
+# TODO: Include atom numbers of superfeatures
 
 
-def postprocessing_msm():
-    
-    #procedures left from postprocessing
-    indc =state_data["frameIndices"]
-    state_data["env_partners_list"]=partners
+def postprocessing_msm(labels_states, dynophore_json, processed_dyn, save_path):
 
-    env_partners = load_env_partners("../tests/Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore.json")
-    store = {}  
-    for i in np.unique(labels_states): 
-        store[str(i)] = []
-    
+    """Postprocessing of the msm for validation purposes of the Markov model."""
+
+    env_partners = load_env_partners(dynophore_json)
+    time_ser_superf = load_time_ser_superfeat(processed_dyn)  # check notebook for it
+    state_data = {}
+    for i in np.unique(labels_states):
+        state_data[str(i)] = {}
+    state_data = generate_state_map(
+        time_ser_superf, labels_states=labels_states, state_data=state_data
+    )
+    state_data = get_information_mstates(
+        labels_states=labels_states, state_data=state_data
+    )
+    for state in state_data.keys():
+        state_data[state]["env_partners_list"] = get_env_partners(
+            state_data[state]["frameIndices_state"], env_partners
+        )
+        unique, counts = get_unique_env_partner(
+            partner_traj=state_data[state]["env_partners_list"]
+        )
+        state_data[state]["unique_env_partners"] = unique
+        state_data[state]["unique_env_partners_counts"] = counts
+    save_path = parse_file_path(save_path)
+    name = "markophore_validation.json"
+    prefix = None
+    file_name = make_name(prefix=prefix, name=name, dir=save_path)
+
+    with open(file_name, "w") as fp:
+        json.dump(state_data, fp)
+    return state_data
+
+
+def load_time_ser_superfeat(path_to_processed_dynp):
+
+    with open(path_to_processed_dynp) as f:
+        data = json.load(f)
+
+    time_ser = pd.DataFrame(data)
+    time_ser = time_ser.drop(columns="num_frames")
+    obs = time_ser.drop_duplicates()
+    num_obs = len(obs)
+    obs = obs.to_numpy()
+    time_ser = time_ser.to_numpy()
+    return time_ser
+
+
 ##
-def generate_state_map(time_ser_superf, labels_states, state_data): 
+def generate_state_map(time_ser_superf, labels_states, state_data):
     """Generates a map foar each time point of a Markov Sate to a Superfeature tuple such that the time series is the
     (0,1,2), (0,1,3), (0,1,2) etc...
 
@@ -22,35 +68,69 @@ def generate_state_map(time_ser_superf, labels_states, state_data):
         labels_states ([type]): time series of the labels of the different Markov states
 
     Returns:
-        [np.ndarray]: array of 
+        [np.ndarray]: array of
     """
-
-    for i in range(len(time_ser_superf)): 
+    for i in state_data.keys():
+        state_data[str(i)]["pharmacoph_traj"] = []
+    for i in range(len(time_ser_superf)):
         state = str(labels_states[i])
-        state_map=state_data[state]
-        state_map.append(np.where(time_ser_superf[i,:]==1)[0].astype(np.int16).tolist())
-        state_data[state] = state_map
-    return state_map
+        state_map = state_data[state]["pharmacoph_traj"]
+        state_map.append(
+            np.where(time_ser_superf[i, :] == 1)[0].astype(np.int16).tolist()
+        )
+        state_data[state]["pharmacoph_traj"] = state_map
+    return state_data
+
 
 ##
-def ??(labels, state_data):  
-    
-    for state in state_data.keys(): 
-        ## include information about the markov_state
-        occ = np.where(labels == int(state))
-        num_occ = len(occ)
-        state_data = {}
-        state_data["frameIndices_state"] = occ
-        state_data["num"] = num_occ
-        #cut unique pharmacophores/superf.patterns
-        unique_parmc = np.unique(np.array(store[state])).tolist()
-        state_data["pharmc"] = unique_parmc
-        superfeats = set()
-        ## cut 
-        for pharmc in unique_parmc:
-            superfeats = superfeats.union(set(pharmc)) 
-        state_data["distinctSuperfeatures"] = list(superfeats)
+def get_information_mstates(labels_states, state_data):
+    """caclulates some general information such as occurences of the Markov states and unique pharmacophores"""
 
+    for state in state_data.keys():
+        ## include information about the markov_state
+        occ = np.where(labels_states == int(state))
+        num_occ = len(occ)
+        # state_data = {} check the new datastructure
+        state_data[state]["frameIndices_state"] = occ[0].tolist()
+        state_data[state]["num"] = num_occ
+        state_data[state]["unique_pharmc"] = get_information_pc(
+            np.array(state_data[state]["pharmacoph_traj"])
+        )
+        state_data[state]["distinctSuperfeatures"] = get_distinct_superfeatures(
+            state_data[state]["unique_pharmc"]
+        )
+    return state_data
+
+
+def get_distinct_superfeatures(unique_pharmc):
+    """[summary]
+
+    Args:
+        unique_pharmc ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+
+    superfeats = set()
+    for pharmc in unique_pharmc:
+        superfeats = superfeats.union(set(pharmc))
+    return list(superfeats)
+
+
+def get_information_pc(pharmacophore_traj):
+    """Calculates information about the pharcophore/superfeature patterns
+
+    Args:
+        state_data ([type]): [description]
+
+    Returns:
+        [(list, float)]:
+    """
+
+    # TODO can include counts
+    unique_pharmc = np.unique(pharmacophore_traj).tolist()
+    return unique_pharmc
 
 
 def get_env_partners(frame_indices, env_partners):
@@ -63,38 +143,43 @@ def get_env_partners(frame_indices, env_partners):
     Returns:
         [type]: [description]
     """
-    
+
     env_partner_arr = []
     residues = list(env_partners.keys())
     for partner in env_partners.keys():
         env_partner_arr.append(env_partners[partner])
-        
+
     env_partner_arr = np.array(env_partner_arr)
     partners = []
-    
-    for i in range(len(frame_indices[0])):
-        eps = np.array(residues)[np.where(env_partner_arr[:, indc][:,0,i] == 1)[0].tolist()]
+
+    for i in range(len(frame_indices)):
+        eps = np.array(residues)[
+            np.where(env_partner_arr[:, frame_indices][:, i] == 1)[0].tolist()
+        ].tolist()
         partners.append(eps)
-
-
     return partners
-    
-    
-    
 
 
-def get_unique_env_partner(partner_traj): 
-    """Counts env_partners from the env_partner trajectory 
+def get_unique_env_partner(partner_traj):
+    """Counts env_partners from the env_partner trajectory
 
     Args:
-        partner_traj ([type]): specific to a state returns the trajectory of the env partners 
+        partner_traj ([type]): specific to a state returns the trajectory of the env partners
 
     Returns:
         [(unique_partners, their_counts)]:
     """
-    
+
     count = []
-    for partner in partner_traj: 
-        count+=(partner.tolist())
-    unique, counts = np.unique(count, return_counts = True)
-    return unique, counts
+    for partner in np.array(partner_traj).flatten():
+        count += partner
+    unique, counts = np.unique(count, return_counts=True)
+    return unique.tolist(), counts.tolist()
+
+
+if __name__ == "__main__":
+    processed_dynp = (
+        "../tests/Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore_time_series.json"
+    )
+    dynophore_json = "../tests/Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore.json"
+    postprocessing_msm(processed_dynp, dynophore_json)
