@@ -1,9 +1,12 @@
+# test postprocessing of MSM for validation purposes and additional viz.
+
 import pytest
 import pandas as pd
 import json
 import os
 
 
+from dylightful.mdanalysis import write_state
 from dylightful.discretizer import tae_discretizer, smooth_projection_k_means
 from dylightful.utilities import get_dir, load_parsed_dyno
 from dylightful.msm import fit_msm, build_tae_msm
@@ -23,17 +26,26 @@ dirname = os.path.dirname(__file__)
         ),
     ],
 )
-def test_postprocessing(traj_path, dyn_path, discretizer, num_states):
+def test_write_state(traj_path, dyn_path, discretizer, num_states):
+    """Testing the writing function of the MDanalysis script
+
+    Args:
+        traj_path ([type]): [description]
+        dyn_path ([type]): [description]
+        discretizer ([type]): [description]
+        num_states ([type]): [description]
+    """
+
+    topology = os.path.join(dirname, "Trajectories/ZIKV/startframe.pdb")
+    coordinates = os.path.join(dirname, "Trajectories/ZIKV/trajectory.dcd")
+    base = os.path.join(dirname, "Trajectories/ZIKV/")
+    prefix = "ligand_view_"
     traj_path = os.path.join(dirname, traj_path)
     dyn_path = os.path.join(dirname, dyn_path)
     time_ser, num_obs = load_parsed_dyno(traj_path=traj_path)
     save_path = get_dir(traj_path)
     proj = discretizer(time_ser=time_ser, save_path=save_path)
     labels = smooth_projection_k_means(proj, num_states)
-    fit_msm(trajectory=labels, save_path=save_path)
-    postprocessing_msm(
-        labels_states=labels,
-        dynophore_json=dyn_path,
-        processed_dyn=traj_path,
-        save_path=save_path,
+    write_state(
+        labels=labels[:100], topology=topology, coordinates=coordinates, base=base
     )

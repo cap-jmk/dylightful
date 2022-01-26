@@ -147,16 +147,20 @@ def get_env_partners(frame_indices, env_partners):
     env_partner_arr = []
     residues = list(env_partners.keys())
     for partner in env_partners.keys():
-        env_partner_arr.append(env_partners[partner])
+        env_partner_arr.append(np.array(env_partners[partner]))
 
     env_partner_arr = np.array(env_partner_arr)
     partners = []
 
     for i in range(len(frame_indices)):
-        eps = np.array(residues)[
-            np.where(env_partner_arr[:, frame_indices][:, i] == 1)[0].tolist()
-        ].tolist()
-        partners.append(eps)
+        # assert env_partners == 1, str(env_partner_arr.shape)+str(env_partner_arr)+str(len(env_partner_arr[0]))+str(env_partner_arr[0].shape)
+        res = []
+        for j in range(len(env_partner_arr)):
+            occ = env_partner_arr[j][0, i]
+            if occ == 1:
+                res.append(np.array(residues)[j])
+
+        partners.append(res)
     return partners
 
 
