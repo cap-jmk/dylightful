@@ -56,24 +56,15 @@ def tae_discretizer(
     tae.fit(loader_train, n_epochs=50, validation_loader=loader_val)
     tae_model = tae.fetch_model()
     proj = tae_model.transform(time_ser)
-    try:
-        plot_tae_training(tae_model=tae, prefix=prefix, save_path=save_path)
-    except:
-        print("Did not plot the TAE training.")
-    try:
-        plot_tae_transform(proj=proj, prefix=prefix, save_path=save_path)
-    except:
-        print("Did not plot the TAE transform.")
-    try:
-        find_states_kmeans(
-            proj=proj,
-            prefix=prefix,
-            save_path=save_path,
-            num_cluster=num_cluster,
-            tol=tol,
-        )
-    except:
-        print("Did not plot ellbow")
+    plot_tae_training(tae_model=tae, prefix=prefix, save_path=save_path)
+    plot_tae_transform(proj=proj, prefix=prefix, save_path=save_path)
+    find_states_kmeans(
+        proj=proj,
+        prefix=prefix,
+        save_path=save_path,
+        num_cluster=num_cluster,
+        tol=tol,
+    )
     return proj
 
 
@@ -106,9 +97,6 @@ def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
         clf = KMeans(n_clusters=i).fit(proj)
         scores[i] = clf.score(proj)
         sum_of_squared_distances[i] = clf.inertia_
-    # clf = KMeans(n_clusters=3, random_state=random_state).fit(proj)
-    # labels = clf.labels_
-    # TODO:Implement relative metric
     plot_ellbow_kmeans(
         metric=sum_of_squared_distances, prefix=prefix, save_path=save_path
     )
@@ -202,7 +190,7 @@ def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.xlabel("Number of cluster")
     plt.ylabel("Sum of squared distances $R$")
-    plt.plot(np.arange(1, len(metric) + 1, 1), metric[1:])
+    plt.plot(np.arange(1, len(metric), 1), metric[1:])
     plt.savefig(file_name, dpi=300)
     print("Saved", file_name)
     return None
