@@ -9,6 +9,7 @@ from tqdm import tqdm
 
 
 from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 
 from deeptime.util.torch import MLP
 from deeptime.util.data import TrajectoryDataset
@@ -93,10 +94,11 @@ def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
 
     scores = np.zeros(num_cluster)
     sum_of_squared_distances = np.zeros(num_cluster)
-    for i in range(1, num_cluster):
+    for i in range(2, num_cluster):
         clf = KMeans(n_clusters=i).fit(proj)
         scores[i] = clf.score(proj)
         sum_of_squared_distances[i] = clf.inertia_
+
     plot_ellbow_kmeans(
         metric=sum_of_squared_distances, prefix=prefix, save_path=save_path
     )
@@ -126,7 +128,7 @@ def plot_tae_training(tae_model, prefix=None, save_path=None):
     return None
 
 
-def plot_tae_transform(proj, num_steps=1000, prefix=None, save_path=None):
+def plot_tae_transform(proj, num_steps=5000, prefix=None, save_path=None):
     """Plots the transformation obtained by the TAE model.
 
     Args:
@@ -166,7 +168,7 @@ def plot_scores_kmeans(metric, prefix=None, save_path=None):
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.xlabel("Number of cluster")
     plt.ylabel("Euclidean Norm $l^2$")
-    plt.plot(metric[1:])
+    plt.plot(np.arange(2, len(metric), 1), metric[2:])
     plt.savefig(file_name, dpi=300)
     print("Saved", file_name)
     return None
@@ -190,7 +192,7 @@ def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.xlabel("Number of cluster")
     plt.ylabel("Sum of squared distances $R$")
-    plt.plot(np.arange(1, len(metric), 1), metric[1:])
+    plt.plot(np.arange(2, len(metric), 1), metric[2:])
     plt.savefig(file_name, dpi=300)
     print("Saved", file_name)
     return None

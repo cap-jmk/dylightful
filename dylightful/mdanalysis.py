@@ -4,7 +4,12 @@ import numpy as np
 
 
 def write_state(
-    labels, topology, coordinates, base, selection_string="protein or resname *"
+    labels,
+    topology,
+    coordinates,
+    base,
+    prefix=None,
+    selection_string="protein or resname *",
 ):
     """write out multipdb for markov state of given perspective
 
@@ -14,13 +19,16 @@ def write_state(
         coordinates ([type]): [description]
         base ([type]): [description]
     """
-
+    name = "_state_"
+    if prefix is not None:
+        name = prefix + name
     u = MDAnalysis.Universe(topology, coordinates)
     num_states = len(np.unique(labels))
+    print("Writing states to", base + name)
     for i in range(num_states):
         ind = np.where(labels == i)[0]
         protein = u.select_atoms(selection_string)
-        with MDAnalysis.Writer(base + "state_" + str(i) + ".pdb", protein.n_atoms) as W:
+        with MDAnalysis.Writer(base + name + str(i) + ".pdb", protein.n_atoms) as W:
             for ts in u.trajectory[ind]:
                 W.write(protein)
     return
