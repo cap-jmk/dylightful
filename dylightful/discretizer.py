@@ -169,6 +169,7 @@ def plot_scores_kmeans(metric, prefix=None, save_path=None):
     plt.xlabel("Number of cluster")
     plt.ylabel("Euclidean Norm $l^2$")
     plt.plot(np.arange(2, len(metric), 1), metric[2:])
+    plt.scatter(np.arange(2, len(metric), 1), metric[2:])
     plt.savefig(file_name, dpi=300)
     print("Saved", file_name)
     return None
@@ -193,6 +194,7 @@ def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
     plt.xlabel("Number of cluster")
     plt.ylabel("Sum of squared distances $R$")
     plt.plot(np.arange(2, len(metric), 1), metric[2:])
+    plt.scatter(np.arange(2, len(metric), 1), metric[2:])
     plt.savefig(file_name, dpi=300)
     print("Saved", file_name)
     return None
