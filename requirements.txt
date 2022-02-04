@@ -7,3 +7,5 @@ torchvision
 torchaudio
 matplotlib
 tqdm
+MDAnalysis
+seaborn

@@ -60,11 +60,7 @@ def tae_discretizer(
     plot_tae_training(tae_model=tae, prefix=prefix, save_path=save_path)
     plot_tae_transform(proj=proj, prefix=prefix, save_path=save_path)
     find_states_kmeans(
-        proj=proj,
-        prefix=prefix,
-        save_path=save_path,
-        num_cluster=num_cluster,
-        tol=tol,
+        proj=proj, prefix=prefix, save_path=save_path, num_cluster=num_cluster, tol=tol,
     )
     return proj
 

@@ -17,9 +17,7 @@ dirname = os.path.dirname(__file__)
 
 @pytest.mark.parametrize(
     "traj_path, discretizer, num_states",
-    [
-        ("Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore.json", tae_discretizer, 4),
-    ],
+    [("Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore.json", tae_discretizer, 4),],
 )
 def test_protein_perspective(traj_path, discretizer, num_states):
 
@@ -47,17 +45,13 @@ def test_protein_perspective(traj_path, discretizer, num_states):
     proj = discretizer(time_ser=time_ser, save_path=save_path, prefix=prefix)
     labels = smooth_projection_k_means(proj, num_states)
     fit_msm(
-        trajectory=labels,
-        save_path=save_path,
-        prefix=prefix,
+        trajectory=labels, save_path=save_path, prefix=prefix,
     )
 
 
 @pytest.mark.parametrize(
     "traj_path, discretizer, num_states",
-    [
-        ("Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore.json", tae_discretizer, 4),
-    ],
+    [("Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore.json", tae_discretizer, 4),],
 )
 def test_mixed_perspective(traj_path, discretizer, num_states):
 
@@ -118,9 +112,7 @@ def test_ligand_perspective(traj_path, discretizer, num_states):
 
 @pytest.mark.parametrize(
     "traj_path,  num_states",
-    [
-        ("Trajectories/CDK2/1KE7_dynophore_time_series.json", 4),
-    ],
+    [("Trajectories/CDK2/1KE7_dynophore_time_series.json", 4),],
 )
 def test_build_tae_msm(traj_path, num_states):
     prefix = "ligand"

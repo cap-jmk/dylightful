@@ -12,6 +12,7 @@ __pycache__/
 *dcd
 *png
 notebooks/*
+replot.py
 # C extensions
 *.so
 
