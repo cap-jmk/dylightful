@@ -1,7 +1,11 @@
 # Package to develop Markov Analysis of Dynophores
 
+This package aims to make the analysis of interaction patterns in supramolecular complexes more easy. It builds on the concepts of pharmaceutical sciences, computational chemistry, quantum mechanics, statistical modelling, and artificial intelligence. 
+
 #Install 
-Maybe you have to install hmmlearn manually, it does not work for all setups out of the box 
+
+To install the necessary packages it is recommended to use the 'conda' package manager. 
+
 ```
 
 ```
