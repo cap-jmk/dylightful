@@ -9,6 +9,7 @@ from tqdm import tqdm
 
 
 from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 
 from deeptime.util.torch import MLP
 from deeptime.util.data import TrajectoryDataset
@@ -17,9 +18,8 @@ from deeptime.decomposition.deep import TAE
 from dylightful.utilities import make_name, parse_file_path
 
 
-
 def tae_discretizer(
-    time_ser, size=3, prefix=None, save_path=None,num_cluster=15, tol=0.01
+    time_ser, size=3, prefix=None, save_path=None, num_cluster=15, tol=0.01
 ):
     """Test MSM with time lagged autoencoders according to Noé et al.
 
@@ -42,7 +42,10 @@ def tae_discretizer(
     )
     loader_train = DataLoader(train_data, batch_size=64, shuffle=False)
     loader_val = DataLoader(val_data, batch_size=len(val_data), shuffle=False)
-    units = [num_superfeatures] + [size*num_superfeatures+size*num_superfeatures, 1]
+    units = [num_superfeatures] + [
+        size * num_superfeatures + size * num_superfeatures,
+        1,
+    ]
     encoder = MLP(
         units,
         nonlinearity=torch.nn.ReLU,
@@ -54,15 +57,34 @@ def tae_discretizer(
     tae.fit(loader_train, n_epochs=50, validation_loader=loader_val)
     tae_model = tae.fetch_model()
     proj = tae_model.transform(time_ser)
-    plot_tae_training(tae_model=tae, prefix = prefix, save_path=save_path)
-    plot_tae_transform(proj=proj, prefix = prefix,  save_path=save_path)
-    smooth_projection_k_means(proj=proj,prefix = prefix,  save_path=save_path, num_cluster=num_cluster, tol=tol)
-    #TODO:save the trjacetory
-    
+    plot_tae_training(tae_model=tae, prefix=prefix, save_path=save_path)
+    plot_tae_transform(proj=proj, prefix=prefix, save_path=save_path)
+    find_states_kmeans(
+        proj=proj,
+        prefix=prefix,
+        save_path=save_path,
+        num_cluster=num_cluster,
+        tol=tol,
+    )
+    return proj
 
 
-def smooth_projection_k_means(proj, prefix, save_path, num_cluster=15, tol=0.01):
-    """Cluster the projection to get realy discretized values necessary for the MSM 
+def smooth_projection_k_means(arr, num_cluster):
+    """Clusters an array with k_means according to num_cluster
+
+    Args:
+        proj ([type]): [description]
+        num_cluster ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    clf = KMeans(n_clusters=num_cluster).fit(arr)
+    return clf.labels_
+
+
+def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
+    """Cluster the projection to get realy discretized values necessary for the MSM
 
     Args:
         proj ([type]): [description]
@@ -70,16 +92,16 @@ def smooth_projection_k_means(proj, prefix, save_path, num_cluster=15, tol=0.01)
         tol (float, optional): [description]. Defaults to 0.01.
     """
 
-    random_state = 42
     scores = np.zeros(num_cluster)
     sum_of_squared_distances = np.zeros(num_cluster)
-    for i in range(1, num_cluster):
-        clf = KMeans(n_clusters=i, random_state=random_state).fit(proj)
+    for i in range(2, num_cluster):
+        clf = KMeans(n_clusters=i).fit(proj)
         scores[i] = clf.score(proj)
         sum_of_squared_distances[i] = clf.inertia_
-    # clf = KMeans(n_clusters=3, random_state=random_state).fit(proj)
-    # labels = clf.labels_
-    plot_ellbow_kmeans(metric=sum_of_squared_distances, prefix=prefix, save_path=save_path)
+
+    plot_ellbow_kmeans(
+        metric=sum_of_squared_distances, prefix=prefix, save_path=save_path
+    )
     plot_scores_kmeans(metric=scores, prefix=prefix, save_path=save_path)
     return [scores, sum_of_squared_distances]
 
@@ -92,6 +114,8 @@ def plot_tae_training(tae_model, prefix=None, save_path=None):
         file_name ([type], optional): [description]. Defaults to None.
         save_path ([type], optional): [description]. Defaults to None.
     """
+    plt.clf()
+    plt.cla()
     name = "_tae_training.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.semilogy(*tae_model.train_losses.T, label="train")
@@ -100,11 +124,11 @@ def plot_tae_training(tae_model, prefix=None, save_path=None):
     plt.ylabel("Loss")
     plt.legend()
     plt.savefig(file_name, dpi=300)
-    plt.clf()
+
     return None
 
 
-def plot_tae_transform(proj, num_steps=1000, prefix=None, save_path=None):
+def plot_tae_transform(proj, num_steps=5000, prefix=None, save_path=None):
     """Plots the transformation obtained by the TAE model.
 
     Args:
@@ -113,6 +137,8 @@ def plot_tae_transform(proj, num_steps=1000, prefix=None, save_path=None):
         file_name ([type], optional): [description]. Defaults to None.
         save_path ([type], optional): [description]. Defaults to None.
     """
+    plt.clf()
+    plt.cla()
     name = "_tae_transform.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.ylabel("State")
@@ -123,9 +149,9 @@ def plot_tae_transform(proj, num_steps=1000, prefix=None, save_path=None):
         plt.plot(proj[:num_steps])
     plt.legend()
     plt.savefig(file_name, dpi=300)
-    plt.clf()
 
-def plot_scores_kmeans(metric, prefix=None, save_path=None): 
+
+def plot_scores_kmeans(metric, prefix=None, save_path=None):
     """Plots the scores of the k_means finder
 
     Args:
@@ -136,19 +162,22 @@ def plot_scores_kmeans(metric, prefix=None, save_path=None):
     Returns:
         None
     """
+    plt.clf()
+    plt.cla()
     name = "_scores_kmeans.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.xlabel("Number of cluster")
     plt.ylabel("Euclidean Norm $l^2$")
-    plt.plot(metric[1:])
+    plt.plot(np.arange(2, len(metric), 1), metric[2:])
+    plt.scatter(np.arange(2, len(metric), 1), metric[2:])
     plt.savefig(file_name, dpi=300)
-    plt.clf()
+    print("Saved", file_name)
     return None
-    
+
 
 def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
     """Plots the sum of squared distances for K-Means to do the ellbow method visually
-    
+
 
     Args:
         sum_of_squared_distances ([type]): [description]
@@ -158,13 +187,14 @@ def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
     Returns:
         None
     """
+    plt.clf()
+    plt.cla()
     name = "_ellbow_kMeans.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.xlabel("Number of cluster")
     plt.ylabel("Sum of squared distances $R$")
-    plt.plot(metric[1:])
+    plt.plot(np.arange(2, len(metric), 1), metric[2:])
+    plt.scatter(np.arange(2, len(metric), 1), metric[2:])
     plt.savefig(file_name, dpi=300)
-    plt.clf()
+    print("Saved", file_name)
     return None
-
-

@@ -1,7 +1,24 @@
+![Python Versions](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10-blue) 
+![Style Black](https://warehouse-camo.ingress.cmh1.psfhosted.org/fbfdc7754183ecf079bc71ddeabaf88f6cbc5c00/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d626c61636b2d3030303030302e737667) 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Test](https://github.com/MQSchleich/dylightful/actions/workflows/python-app.yaml/badge.svg?branch=main)
+
 # Package to develop Markov Analysis of Dynophores
 
-#Install 
-Maybe you have to install hmmlearn manually, it does not work for all setups out of the box 
+This package aims to make the analysis of interaction patterns in supramolecular complexes more easy. It builds on the concepts of pharmaceutical sciences, computational chemistry, quantum mechanics, statistical modelling, and artificial intelligence. 
+Core dependencies are 
+
+* MDAnalsis
+* Deeptime 
+* Dynophores
+* scikit-learn
+* numpy 
+* pandas
+
+# Install 
+
+To install the necessary packages it is recommended to use the 'conda' package manager. 
+
 ```
 
 ```
