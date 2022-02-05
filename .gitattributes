@@ -1,1 +1,2 @@
-notebooks/** linguist-documentation
+notebooks/*.ipynb linguist-vendored
+tests/Trajectories/ZIKV/*.dcd linguist-vendored
