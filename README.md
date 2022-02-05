@@ -8,7 +8,7 @@
 This package aims to make the analysis of interaction patterns in supramolecular complexes more easy. It builds on the concepts of pharmaceutical sciences, computational chemistry, quantum mechanics, statistical modelling, and artificial intelligence. 
 Core dependencies are 
 
-* MDAnalsis
+* MDAnalysis
 * Deeptime 
 * Dynophores
 * scikit-learn
@@ -17,10 +17,10 @@ Core dependencies are
 
 # Install 
 
-To install the necessary packages it is recommended to use the 'conda' package manager. 
+To install the necessary packages it is recommended to use the 'conda' package manager. However, all packages can also be installed via the requirements.txt
 
 ```
-
+pip install -r requirements.txt
 ```
 
 # Convert Dynophore trajectory 
