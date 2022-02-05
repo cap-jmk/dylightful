@@ -9,8 +9,7 @@ import os
 from dylightful.mdanalysis import write_state
 from dylightful.discretizer import tae_discretizer, smooth_projection_k_means
 from dylightful.utilities import get_dir, load_parsed_dyno
-from dylightful.msm import fit_msm, build_tae_msm
-from dylightful.postprocess import postprocessing_msm
+
 
 dirname = os.path.dirname(__file__)
 
@@ -37,7 +36,7 @@ def test_write_state(traj_path, dyn_path, discretizer, num_states):
     """
 
     topology = os.path.join(dirname, "Trajectories/ZIKV/startframe.pdb")
-    coordinates = os.path.join(dirname, "Trajectories/ZIKV/trajectory.dcd")
+    coordinates = os.path.join(dirname, "Trajectories/ZIKV/test.dcd")
     base = os.path.join(dirname, "Trajectories/ZIKV/")
     prefix = "ligand_view_"
     traj_path = os.path.join(dirname, traj_path)
