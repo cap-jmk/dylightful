@@ -32,15 +32,3 @@ def write_state(
             for ts in u.trajectory[ind]:
                 W.write(protein)
     return
-
-
-def load_validation():
-    """[summary]
-
-    Returns:
-        [type]: [description]
-    """
-
-    f = open("../tests/Trajectories/ZIKV/markophore_validation.json")
-    data = json.load(f)
-    return data

@@ -181,9 +181,13 @@ def get_unique_env_partner(partner_traj):
     return unique.tolist(), counts.tolist()
 
 
-if __name__ == "__main__":
-    processed_dynp = (
-        "../tests/Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore_time_series.json"
-    )
-    dynophore_json = "../tests/Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore.json"
-    postprocessing_msm(processed_dynp, dynophore_json)
+def load_validation():
+    """[summary]
+
+    Returns:
+        [type]: [description]
+    """
+
+    f = open("../tests/Trajectories/ZIKV/markophore_validation.json")
+    data = json.load(f)
+    return data
