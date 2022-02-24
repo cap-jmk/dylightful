@@ -43,7 +43,7 @@ def test_write_state(traj_path, dyn_path, discretizer, num_states):
     dyn_path = os.path.join(dirname, dyn_path)
     time_ser, num_obs = load_parsed_dyno(traj_path=traj_path)
     save_path = get_dir(traj_path)
-    proj = discretizer(time_ser=time_ser, save_path=save_path)
+    proj = discretizer(time_ser=time_ser, num_states=num_states, save_path=save_path)
     labels = smooth_projection_k_means(proj, num_states)
     write_state(
         labels=labels[:100], topology=topology, coordinates=coordinates, base=base
