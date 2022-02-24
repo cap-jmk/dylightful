@@ -2,9 +2,9 @@ pandas
 scikit-learn
 hmmlearn
 deeptime
-torch 
-torchvision 
-torchaudio
+torch -f https://data.pyg.org/whl/torch-1.10.0+cu113.html
+torchvision -f https://data.pyg.org/whl/torch-1.10.0+cu113.html
+torchaudio -f https://data.pyg.org/whl/torch-1.10.0+cu113.html
 matplotlib
 tqdm
 MDAnalysis

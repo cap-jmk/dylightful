@@ -13,6 +13,7 @@ Core dependencies are
 * Deeptime 
 * Dynophores
 * scikit-learn
+* hmmlearn
 * numpy 
 * pandas
 

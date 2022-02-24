@@ -86,7 +86,14 @@ def rewrites_time_series(feature_series):
                             max_frames = int(
                                 frame_index
                             )  # if something with the frame_index is wrong set it here
+                            print("superfeature:", keys[i])
                             print("Set max frames to", frame_index)
+                            if i > 0:
+                                for j in range(i):
+                                    print("resetting", keys[j])
+                                    tmp = list(feature_series[keys[j]])
+                                    tmp += [0]
+                                    feature_series[keys[j]] = tmp
                     else:
                         tmp = np.zeros(int(frame_index + 50))  # free new memory
                         tmp[: len(new_time_ser)] = new_time_ser
@@ -111,6 +118,8 @@ def rewrites_time_series(feature_series):
             + str(len(new_time_ser))
         )
         feature_series[keys[i]] = new_time_ser.astype(np.int32).tolist()
+    for i in range(len(keys) - 1):
+        print(len(feature_series[keys[i]]))
     return feature_series
 
 

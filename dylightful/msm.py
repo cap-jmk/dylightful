@@ -10,7 +10,7 @@ from dylightful.utilities import make_name, get_dir, load_parsed_dyno
 from dylightful.discretizer import tae_discretizer, smooth_projection_k_means
 
 
-def build_tae_msm(traj_path, time_ser, num_obs, num_states, prefix=None):
+def build_tae_msm(traj_path, time_ser, num_states, prefix=None):
     """does the tae analysis of a dynophore trajectory
 
     Args:
@@ -18,7 +18,9 @@ def build_tae_msm(traj_path, time_ser, num_obs, num_states, prefix=None):
         num_states (int): assumed states
     """
     save_path = get_dir(traj_path)
-    proj = tae_discretizer(time_ser=time_ser, save_path=save_path)
+    proj = tae_discretizer(
+        time_ser=time_ser, num_states=num_states, save_path=save_path
+    )
     labels = smooth_projection_k_means(proj, num_states)
     msm = fit_msm(trajectory=labels, save_path=save_path, prefix=prefix)
     return msm, labels, proj, time_ser

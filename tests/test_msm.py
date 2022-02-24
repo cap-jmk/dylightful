@@ -44,7 +44,9 @@ def test_protein_perspective(traj_path, discretizer, num_states):
         prefix=prefix,
         save_path=save_path,
     )
-    proj = discretizer(time_ser=time_ser, save_path=save_path, prefix=prefix)
+    proj = discretizer(
+        time_ser=time_ser, num_states=num_states, save_path=save_path, prefix=prefix
+    )
     labels = smooth_projection_k_means(proj, num_states)
     fit_msm(
         trajectory=labels,
@@ -79,7 +81,9 @@ def test_mixed_perspective(traj_path, discretizer, num_states):
         save_path=save_path,
     )
 
-    proj = discretizer(time_ser=time_ser, save_path=save_path, prefix="mixed")
+    proj = discretizer(
+        time_ser=time_ser, num_states=num_states, save_path=save_path, prefix="mixed"
+    )
 
     labels = smooth_projection_k_means(proj, num_states)
     fit_msm(trajectory=labels, save_path=save_path, prefix="mixed")
@@ -104,7 +108,9 @@ def test_ligand_perspective(traj_path, discretizer, num_states):
         save_path=save_path,
     )
 
-    proj = discretizer(time_ser=time_ser, save_path=save_path, prefix=prefix)
+    proj = discretizer(
+        time_ser=time_ser, num_states=num_states, save_path=save_path, prefix=prefix
+    )
     labels = smooth_projection_k_means(proj, num_states)
     fit_msm(trajectory=labels, save_path=save_path, prefix=prefix)
 
@@ -123,7 +129,6 @@ def test_build_tae_msm(traj_path, num_states):
     build_tae_msm(
         traj_path,
         time_ser=time_ser,
-        num_obs=num_obs,
         num_states=num_states,
         prefix=prefix,
     )
