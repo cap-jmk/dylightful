@@ -19,7 +19,7 @@ from dylightful.utilities import make_name, parse_file_path
 
 
 def tae_discretizer(
-    time_ser, size=3, prefix=None, save_path=None, num_cluster=15, tol=0.01
+    time_ser, num_states, size=3, prefix=None, save_path=None, num_cluster=15, tol=0.01
 ):
     """Test MSM with time lagged autoencoders according to Noé et al.
 
@@ -31,6 +31,8 @@ def tae_discretizer(
         num_cluster (int, optional): Maximal number of MSM states to fit the analysis to. Defaults to 15.
         tol (float, optional): Tolerrance when to stop the clustering to find optimal states. Defaults to 0.01.
     """
+    if num_states > num_cluster // 2:
+        num_cluster = 2 * num_states
     save_path = parse_file_path(save_path)
     num_superfeatures = len(time_ser[0])
     # set_up tae
