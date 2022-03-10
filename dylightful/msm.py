@@ -8,7 +8,7 @@ import os
 
 from dylightful.utilities import make_name, get_dir, load_parsed_dyno
 from dylightful.discretizer import tae_discretizer, smooth_projection_k_means
-
+from dylightful.postprocess import sort_markov_matrix
 
 def build_tae_msm(traj_path, time_ser, num_states, prefix=None):
     """does the tae analysis of a dynophore trajectory
@@ -44,11 +44,12 @@ def fit_msm(trajectory, prefix=None, save_path=None):
     plt.clf()
 
     estimator = TransitionCountEstimator(lagtime=1, count_mode="sliding")
-    counts = estimator.fit(trajectory).fetch_model()  # fit and fetch the model
+    counts = estimator.fit(trajectory).fetch_model()
+    count_matrix = sort_markov_matrix(counts.count_matrix)# fit and fetch the model
     estimator = markov.msm.MaximumLikelihoodMSM(
         reversible=True, stationary_distribution_constraint=None
     )
-    ax = sns.heatmap(counts.count_matrix)
+    ax = sns.heatmap(count_matrix)
     fig = ax.get_figure()
     name = "_msm_count_matrix.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
@@ -57,8 +58,9 @@ def fit_msm(trajectory, prefix=None, save_path=None):
     plt.clf()
     name = "_msm_transistion_matrix.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
-    msm = estimator.fit(counts).fetch_model()  # TSM
-    ax = sns.heatmap(msm.transition_matrix)
+    msm = estimator.fit(counts).fetch_model() 
+    transition_matrix = sort_markov_matrix(msm.transition_matrix)# TSM
+    ax = sns.heatmap(transition_matrix)
     fig = ax.get_figure()
     plt.xlabel("State")
     plt.ylabel("State")

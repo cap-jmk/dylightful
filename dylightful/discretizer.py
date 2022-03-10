@@ -42,8 +42,8 @@ def tae_discretizer(
     train_data, val_data = torch.utils.data.random_split(
         dataset, [len(dataset) - n_val, n_val]
     )
-    loader_train = DataLoader(train_data, batch_size=64, shuffle=False)
-    loader_val = DataLoader(val_data, batch_size=len(val_data), shuffle=False)
+    loader_train = DataLoader(train_data, batch_size=64, shuffle=True)
+    loader_val = DataLoader(val_data, batch_size=len(val_data), shuffle=True)
     units = [num_superfeatures] + [
         size * num_superfeatures + size * num_superfeatures,
         1,
@@ -56,7 +56,7 @@ def tae_discretizer(
     )
     decoder = MLP(units[::-1], nonlinearity=torch.nn.ReLU, initial_batchnorm=False)
     tae = TAE(encoder, decoder, learning_rate=1e-3)
-    tae.fit(loader_train, n_epochs=50, validation_loader=loader_val)
+    tae.fit(loader_train, n_epochs=100, validation_loader=loader_val)
     tae_model = tae.fetch_model()
     proj = tae_model.transform(time_ser)
     plot_tae_training(tae_model=tae, prefix=prefix, save_path=save_path)
@@ -71,41 +71,13 @@ def tae_discretizer(
     return proj
 
 
-def smooth_projection_k_means(arr, num_cluster):
-    """Clusters an array with k_means according to num_cluster
-
-    Args:
-        proj ([type]): [description]
-        num_cluster ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-    clf = KMeans(n_clusters=num_cluster).fit(arr)
-    return clf.labels_
 
 
-def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
-    """Cluster the projection to get realy discretized values necessary for the MSM
 
-    Args:
-        proj ([type]): [description]
-        num_cluster (int, optional): [description]. Defaults to 15.
-        tol (float, optional): [description]. Defaults to 0.01.
-    """
 
-    scores = np.zeros(num_cluster)
-    sum_of_squared_distances = np.zeros(num_cluster)
-    for i in range(2, num_cluster):
-        clf = KMeans(n_clusters=i).fit(proj)
-        scores[i] = clf.score(proj)
-        sum_of_squared_distances[i] = clf.inertia_
 
-    plot_ellbow_kmeans(
-        metric=sum_of_squared_distances, prefix=prefix, save_path=save_path
-    )
-    plot_scores_kmeans(metric=scores, prefix=prefix, save_path=save_path)
-    return [scores, sum_of_squared_distances]
+
+
 
 
 def plot_tae_training(tae_model, prefix=None, save_path=None):
@@ -151,6 +123,29 @@ def plot_tae_transform(proj, num_steps=5000, prefix=None, save_path=None):
         plt.plot(proj[:num_steps])
     plt.legend()
     plt.savefig(file_name, dpi=300)
+    
+    
+def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
+    """Cluster the projection to get realy discretized values necessary for the MSM
+
+    Args:
+        proj ([type]): [description]
+        num_cluster (int, optional): [description]. Defaults to 15.
+        tol (float, optional): [description]. Defaults to 0.01.
+    """
+
+    scores = np.zeros(num_cluster)
+    sum_of_squared_distances = np.zeros(num_cluster)
+    for i in range(2, num_cluster):
+        clf = KMeans(n_clusters=i).fit(proj)
+        scores[i] = clf.score(proj)
+        sum_of_squared_distances[i] = clf.inertia_
+
+    plot_ellbow_kmeans(
+        metric=sum_of_squared_distances, prefix=prefix, save_path=save_path
+    )
+    plot_scores_kmeans(metric=scores, prefix=prefix, save_path=save_path)
+    return [scores, sum_of_squared_distances]
 
 
 def plot_scores_kmeans(metric, prefix=None, save_path=None):
@@ -200,3 +195,18 @@ def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
     plt.savefig(file_name, dpi=300)
     print("Saved", file_name)
     return None
+
+
+def smooth_projection_k_means(arr, num_cluster):
+    """Clusters an array with k_means according to num_cluster
+
+    Args:
+        proj ([type]): [description]
+        num_cluster ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    clf = KMeans(n_clusters=num_cluster).fit(arr)
+    return clf.labels_
+
