@@ -10,6 +10,33 @@ from dylightful.utilities import parse_file_path, make_name
 # TODO: Include atom numbers of superfeatures
 
 
+def sort_markov_matrix(markov_matrix):
+    """Takes in random markov matrix
+    returns sorted markov matrix
+
+    Args:
+        markov_matrix (np.array): unsorted matrix
+
+    Returns:
+        (np.array): sorted Markov matrix
+    """
+
+    b = markov_matrix.copy()
+    for i in range(len(markov_matrix)):
+        ref1 = markov_matrix[i, i]
+        for j in range(i + 1, len(markov_matrix)):
+            ref2 = markov_matrix[j, j]
+            if ref2 > ref1:
+                markov_matrix[i, :] = b[j, :]
+                markov_matrix[j, :] = b[i, :]
+                b = markov_matrix.copy()
+                for k in range(len(markov_matrix)):
+                    markov_matrix[k, i] = b[k, j]
+                    markov_matrix[k, j] = b[k, i]
+                    b = markov_matrix.copy()
+    return markov_matrix
+
+
 def postprocessing_msm(labels_states, dynophore_json, processed_dyn, save_path):
 
     """Postprocessing of the msm for validation purposes of the Markov model."""

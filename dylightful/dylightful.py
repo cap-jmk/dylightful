@@ -1,5 +1,4 @@
 import click
-from click.utils import format_filename
 
 
 @click.command()

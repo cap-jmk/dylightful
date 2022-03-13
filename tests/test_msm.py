@@ -1,7 +1,5 @@
 from sys import prefix
 import pytest
-import pandas as pd
-import json
 import os
 import numpy as np
 

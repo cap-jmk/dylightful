@@ -1,19 +1,11 @@
-from pathlib import Path
-import torch
-from torch.utils.data import DataLoader
-
-import numpy as np
-import scipy.stats as stats
 import matplotlib.pyplot as plt
-from tqdm import tqdm
-
-
-from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
-
-from deeptime.util.torch import MLP
-from deeptime.util.data import TrajectoryDataset
+import numpy as np
+import torch
 from deeptime.decomposition.deep import TAE
+from deeptime.util.data import TrajectoryDataset
+from deeptime.util.torch import MLP
+from sklearn.cluster import KMeans
+from torch.utils.data import DataLoader
 
 from dylightful.utilities import make_name, parse_file_path
 
@@ -42,8 +34,8 @@ def tae_discretizer(
     train_data, val_data = torch.utils.data.random_split(
         dataset, [len(dataset) - n_val, n_val]
     )
-    loader_train = DataLoader(train_data, batch_size=64, shuffle=False)
-    loader_val = DataLoader(val_data, batch_size=len(val_data), shuffle=False)
+    loader_train = DataLoader(train_data, batch_size=64, shuffle=True)
+    loader_val = DataLoader(val_data, batch_size=len(val_data), shuffle=True)
     units = [num_superfeatures] + [
         size * num_superfeatures + size * num_superfeatures,
         1,
@@ -56,7 +48,7 @@ def tae_discretizer(
     )
     decoder = MLP(units[::-1], nonlinearity=torch.nn.ReLU, initial_batchnorm=False)
     tae = TAE(encoder, decoder, learning_rate=1e-3)
-    tae.fit(loader_train, n_epochs=50, validation_loader=loader_val)
+    tae.fit(loader_train, n_epochs=150, validation_loader=loader_val)
     tae_model = tae.fetch_model()
     proj = tae_model.transform(time_ser)
     plot_tae_training(tae_model=tae, prefix=prefix, save_path=save_path)
@@ -69,43 +61,6 @@ def tae_discretizer(
         tol=tol,
     )
     return proj
-
-
-def smooth_projection_k_means(arr, num_cluster):
-    """Clusters an array with k_means according to num_cluster
-
-    Args:
-        proj ([type]): [description]
-        num_cluster ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-    clf = KMeans(n_clusters=num_cluster).fit(arr)
-    return clf.labels_
-
-
-def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
-    """Cluster the projection to get realy discretized values necessary for the MSM
-
-    Args:
-        proj ([type]): [description]
-        num_cluster (int, optional): [description]. Defaults to 15.
-        tol (float, optional): [description]. Defaults to 0.01.
-    """
-
-    scores = np.zeros(num_cluster)
-    sum_of_squared_distances = np.zeros(num_cluster)
-    for i in range(2, num_cluster):
-        clf = KMeans(n_clusters=i).fit(proj)
-        scores[i] = clf.score(proj)
-        sum_of_squared_distances[i] = clf.inertia_
-
-    plot_ellbow_kmeans(
-        metric=sum_of_squared_distances, prefix=prefix, save_path=save_path
-    )
-    plot_scores_kmeans(metric=scores, prefix=prefix, save_path=save_path)
-    return [scores, sum_of_squared_distances]
 
 
 def plot_tae_training(tae_model, prefix=None, save_path=None):
@@ -200,3 +155,103 @@ def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
     plt.savefig(file_name, dpi=300)
     print("Saved", file_name)
     return None
+
+
+def smooth_projection_k_means(arr, num_cluster):
+    """Clusters an array with k_means according to num_cluster
+
+    Args:
+        proj ([type]): [description]
+        num_cluster ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    clf = KMeans(n_clusters=num_cluster).fit(arr)
+    return clf.labels_
+
+
+def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
+    """Cluster the projection to get realy discretized values necessary for the MSM
+
+    Args:
+        proj ([type]): [description]
+        num_cluster (int, optional): [description]. Defaults to 15.
+        tol (float, optional): [description]. Defaults to 0.01.
+    """
+
+    scores = np.zeros(num_cluster)
+    sum_of_squared_distances = np.zeros(num_cluster)
+    for i in range(2, num_cluster):
+        clf = KMeans(n_clusters=i).fit(proj)
+        scores[i] = clf.score(proj)
+        sum_of_squared_distances[i] = clf.inertia_
+
+    plot_ellbow_kmeans(
+        metric=sum_of_squared_distances, prefix=prefix, save_path=save_path
+    )
+    plot_scores_kmeans(metric=scores, prefix=prefix, save_path=save_path)
+    return [scores, sum_of_squared_distances]
+
+
+def plot_scores_kmeans(metric, prefix=None, save_path=None):
+    """Plots the scores of the k_means finder
+
+    Args:
+        sum_of_squared_distances ([type]): [description]
+        file_name ([type], optional): [description]. Defaults to None.
+        save_path ([type], optional): [description]. Defaults to None.
+
+    Returns:
+        None
+    """
+    plt.clf()
+    plt.cla()
+    name = "_scores_kmeans.png"
+    file_name = make_name(prefix=prefix, name=name, dir=save_path)
+    plt.xlabel("Number of cluster")
+    plt.ylabel("Euclidean Norm $l^2$")
+    plt.plot(np.arange(2, len(metric), 1), metric[2:])
+    plt.scatter(np.arange(2, len(metric), 1), metric[2:])
+    plt.savefig(file_name, dpi=300)
+    print("Saved", file_name)
+    return None
+
+
+def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
+    """Plots the sum of squared distances for K-Means to do the ellbow method visually
+
+
+    Args:
+        sum_of_squared_distances ([type]): [description]
+        file_name ([type], optional): [description]. Defaults to None.
+        save_path ([type], optional): [description]. Defaults to None.
+
+    Returns:
+        None
+    """
+    plt.clf()
+    plt.cla()
+    name = "_ellbow_kMeans.png"
+    file_name = make_name(prefix=prefix, name=name, dir=save_path)
+    plt.xlabel("Number of cluster")
+    plt.ylabel("Sum of squared distances $R$")
+    plt.plot(np.arange(2, len(metric), 1), metric[2:])
+    plt.scatter(np.arange(2, len(metric), 1), metric[2:])
+    plt.savefig(file_name, dpi=300)
+    print("Saved", file_name)
+    return None
+
+
+def smooth_projection_k_means(arr, num_cluster):
+    """Clusters an array with k_means according to num_cluster
+
+    Args:
+        proj ([type]): [description]
+        num_cluster ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    clf = KMeans(n_clusters=num_cluster).fit(arr)
+    return clf.labels_

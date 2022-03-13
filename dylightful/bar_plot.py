@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from dylightful.utilities import make_name, parse_file_path, get_dir
+from dylightful.utilities import make_name
 
 
 def make_barplot(time_ser, ylabel, yticks, prefix=None, save_path=None):
@@ -16,6 +16,8 @@ def make_barplot(time_ser, ylabel, yticks, prefix=None, save_path=None):
     # save_path = get_dir(save_path)
     plt.clf()
     plt.cla()
+    plt.rcParams["font.size"] = "15"
+    plt.tight_layout()
     name = "_barplot.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     code = time_ser
@@ -28,4 +30,5 @@ def make_barplot(time_ser, ylabel, yticks, prefix=None, save_path=None):
     ax.set_ylabel(ylabel)
     ax.set_yticks(np.arange(len(yticks)))
     ax.set_yticklabels(yticks)
+
     fig.savefig(file_name, dpi=dpi, bbox_inches="tight")

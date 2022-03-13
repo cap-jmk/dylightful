@@ -1,8 +1,6 @@
-from os import stat
 from tqdm import tqdm
 import numpy as np
-from numpy.lib.npyio import save
-from hmmlearn.hmm import GaussianHMM, GMMHMM, MultinomialHMM
+from hmmlearn.hmm import GaussianHMM
 import parser
 from plot_hmm import plot_state_diagram, plot_transmat_map
 from metrics import calculate_mean_probas
