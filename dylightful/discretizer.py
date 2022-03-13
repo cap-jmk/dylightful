@@ -4,8 +4,7 @@ import torch
 from deeptime.decomposition.deep import TAE
 from deeptime.util.data import TrajectoryDataset
 from deeptime.util.torch import MLP
-from sklearn.cluster import KMeans, SpectralClustering
-from sklearn.metrics import silhouette_score
+from sklearn.cluster import KMeans
 from torch.utils.data import DataLoader
 
 from dylightful.utilities import make_name, parse_file_path
@@ -107,43 +106,6 @@ def plot_tae_transform(proj, num_steps=5000, prefix=None, save_path=None):
         plt.plot(proj[:num_steps])
     plt.legend()
     plt.savefig(file_name, dpi=300)
-
-
-def find_states_spectral(proj, prefix, save_path, num_cluster=15, tol=0.01):
-    """Cluster the projection to get realy discretized values necessary for the MSM
-
-    Args:
-        proj ([type]): [description]
-        num_cluster (int, optional): [description]. Defaults to 15.
-        tol (float, optional): [description]. Defaults to 0.01.
-    """
-
-    scores = np.zeros(num_cluster)
-    sum_of_squared_distances = np.zeros(num_cluster)
-    for i in range(2, num_cluster):
-        clf = SpectralClustering(n_clusters=i, affinity="precomputed", n_jobs=-1).fit(
-            proj
-        )
-        scores[i] = silhouette_score(proj, clf.labels_)
-    plot_scores_kmeans(metric=scores, prefix=prefix, save_path=save_path)
-    return scores
-
-
-def smooth_projection_spectral(arr, num_cluster):
-    """Clusters an array with k_means according to num_cluster
-
-    Args:
-        proj ([type]): [description]
-        num_cluster ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-
-    clf = SpectralClustering(
-        n_clusters=num_cluster, affinity="precomputed", n_jobs=-1
-    ).fit(arr)
-    return clf.labels_
 
 
 def plot_scores_kmeans(metric, prefix=None, save_path=None):
