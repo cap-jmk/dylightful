@@ -1,8 +1,6 @@
 # test postprocessing of MSM for validation purposes and additional viz.
 
 import pytest
-import pandas as pd
-import json
 import os
 
 

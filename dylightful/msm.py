@@ -4,11 +4,10 @@ from deeptime.markov import TransitionCountEstimator
 import deeptime.markov as markov
 import seaborn as sns
 import numpy as np
-import os
 
-from dylightful.utilities import make_name, get_dir, load_parsed_dyno
-from dylightful.discretizer import tae_discretizer, smooth_projection_k_means
-from dylightful.postprocess import sort_markov_matrix
+from dylightful.utilities import make_name, get_dir
+from dylightful.discretizer import tae_discretizer
+
 
 def build_tae_msm(traj_path, time_ser, num_states, prefix=None):
     """does the tae analysis of a dynophore trajectory
@@ -21,7 +20,7 @@ def build_tae_msm(traj_path, time_ser, num_states, prefix=None):
     proj = tae_discretizer(
         time_ser=time_ser, num_states=num_states, save_path=save_path
     )
-    labels = smooth_projection_k_means(proj, num_states)
+    labels = proj
     msm = fit_msm(trajectory=labels, save_path=save_path, prefix=prefix)
     return msm, labels, proj, time_ser
 
@@ -45,7 +44,7 @@ def fit_msm(trajectory, prefix=None, save_path=None):
 
     estimator = TransitionCountEstimator(lagtime=1, count_mode="sliding")
     counts = estimator.fit(trajectory).fetch_model()
-    count_matrix = sort_markov_matrix(counts.count_matrix)# fit and fetch the model
+    count_matrix = counts.count_matrix  # fit and fetch the model
     estimator = markov.msm.MaximumLikelihoodMSM(
         reversible=True, stationary_distribution_constraint=None
     )
@@ -58,14 +57,16 @@ def fit_msm(trajectory, prefix=None, save_path=None):
     plt.clf()
     name = "_msm_transistion_matrix.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
-    msm = estimator.fit(counts).fetch_model() 
-    transition_matrix = sort_markov_matrix(msm.transition_matrix)# TSM
+    msm = estimator.fit(counts).fetch_model()
+    transition_matrix = msm.transition_matrix
     ax = sns.heatmap(transition_matrix)
     fig = ax.get_figure()
     plt.xlabel("State")
     plt.ylabel("State")
     plt.savefig(file_name, dpi=300)
-    return msm
+    plt.cla()
+    plt.clf()
+    return msm, count_matrix
 
 
 def plot_clustered_traj(trajectory, prefix=None, save_path=None):

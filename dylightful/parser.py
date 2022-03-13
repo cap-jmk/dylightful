@@ -1,8 +1,6 @@
-import os
 import xml.etree.ElementTree as ET
 import numpy as np
 import json
-import sys
 
 from dylightful.utilities import save_dict, parse_file_path
 

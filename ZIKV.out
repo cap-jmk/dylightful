@@ -1,0 +1,82 @@
+Saved file to /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore
+5001
+5001
+5001
+5001
+5001
+5001
+5001
+5001
+5001
+5001
+5001
+Saved file to /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/ZIKV-Pro-427-1_dynophore
+There are actually  77  present.
+The length of the observation sequence is  5001
+Saved /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/_ligand_0_ellbow_kMeans.png
+Saved /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/_ligand_0_scores_kmeans.png
+ligand distinct 77
+MSM
+[[0.83850932 0.02784217 0.1243473  0.00930121]
+ [0.00780883 0.8980121  0.07382325 0.02035581]
+ [0.01297408 0.02746315 0.9538961  0.00566667]
+ [0.00681408 0.05317082 0.03978834 0.90022677]]
+Counts
+[[ 270.    9.   40.    3.]
+ [   9. 1039.   86.   23.]
+ [  40.   84. 2938.   18.]
+ [   3.   24.   17.  397.]]
+Saved /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/_ligand_1_ellbow_kMeans.png
+Saved /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/_ligand_1_scores_kmeans.png
+ligand distinct 77
+MSM
+[[9.67780076e-01 2.61754773e-02 4.42276630e-04 5.60217035e-03]
+ [7.67138596e-02 9.05660378e-01 1.28968999e-03 1.63360723e-02]
+ [1.03708839e-02 1.03187689e-02 8.48275870e-01 1.31034477e-01]
+ [6.22479012e-02 6.19350974e-02 6.20915069e-02 8.13725494e-01]]
+Counts
+[[3.274e+03 8.800e+01 2.000e+00 1.900e+01]
+ [9.000e+01 1.056e+03 1.000e+00 1.900e+01]
+ [1.000e+00 2.000e+00 1.230e+02 1.900e+01]
+ [1.900e+01 1.900e+01 1.900e+01 2.490e+02]]
+Saved /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/_ligand_2_ellbow_kMeans.png
+Saved /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/_ligand_2_scores_kmeans.png
+ligand distinct 77
+MSM
+[[0.95304404 0.01742344 0.00351846 0.02601407]
+ [0.10362606 0.8374761  0.04549285 0.01340498]
+ [0.04582302 0.09961826 0.79012346 0.06443525]
+ [0.07039142 0.00609877 0.01338764 0.91012217]]
+Counts
+[[2943.   52.   10.   83.]
+ [  56.  438.   24.    5.]
+ [  12.   24.  192.   15.]
+ [  78.    9.   16. 1043.]]
+Saved /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/_ligand_3_ellbow_kMeans.png
+Saved /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/_ligand_3_scores_kmeans.png
+ligand distinct 77
+MSM
+[[9.35182090e-01 2.88695782e-02 2.19213201e-02 1.40270122e-02]
+ [7.63609815e-02 9.05643746e-01 1.71128466e-02 8.82425778e-04]
+ [1.17295916e-01 3.46184312e-02 8.42756184e-01 5.32946801e-03]
+ [1.36863688e-01 3.25514387e-03 9.71830972e-03 8.50162859e-01]]
+Counts
+[[2.799e+03 8.800e+01 6.500e+01 4.100e+01]
+ [8.500e+01 1.027e+03 2.000e+01 2.000e+00]
+ [6.700e+01 1.900e+01 4.770e+02 3.000e+00]
+ [4.300e+01 0.000e+00 3.000e+00 2.610e+02]]
+Saved /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/_ligand_4_ellbow_kMeans.png
+Saved /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/_ligand_4_scores_kmeans.png
+ligand distinct 77
+MSM
+[[0.93371086 0.00249263 0.04964269 0.01415382]
+ [0.01811355 0.93493977 0.04694668 0.        ]
+ [0.11762561 0.01530755 0.86431373 0.00275312]
+ [0.13802021 0.         0.01133044 0.85064935]]
+Counts
+[[2.803e+03 7.000e+00 1.510e+02 4.100e+01]
+ [8.000e+00 3.880e+02 1.900e+01 0.000e+00]
+ [1.480e+02 2.000e+01 1.102e+03 5.000e+00]
+ [4.400e+01 0.000e+00 2.000e+00 2.620e+02]]
+labels
+Writing states to /home/julian/Documents/Master/dylightful/tests/Trajectories/ZIKV/ligand_state_
