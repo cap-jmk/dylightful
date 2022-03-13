@@ -142,7 +142,7 @@ def smooth_projection_spectral(arr, num_cluster):
 
     clf = SpectralClustering(
         n_clusters=num_cluster, affinity="precomputed", n_jobs=-1
-    ).fit(proj)
+    ).fit(arr)
     return clf.labels_
 
 
