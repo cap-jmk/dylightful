@@ -6,7 +6,7 @@ import seaborn as sns
 import numpy as np
 
 from dylightful.utilities import make_name, get_dir
-from dylightful.discretizer import tae_discretizer
+from dylightful.discretizer import tae_discretizer, smooth_projection_k_means
 
 
 def build_tae_msm(traj_path, time_ser, num_states, prefix=None):
@@ -20,7 +20,8 @@ def build_tae_msm(traj_path, time_ser, num_states, prefix=None):
     proj = tae_discretizer(
         time_ser=time_ser, num_states=num_states, save_path=save_path
     )
-    labels = proj
+    labels = smooth_projection_k_means(proj, num_states)
+
     msm = fit_msm(trajectory=labels, save_path=save_path, prefix=prefix)
     return msm, labels, proj, time_ser
 
