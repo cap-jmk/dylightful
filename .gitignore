@@ -9,6 +9,7 @@ __pycache__/
 *csv
 *json
 *cgo 
+*.out
 *dcd
 *png
 notebooks/*
