@@ -1,16 +1,12 @@
-import torch
-from torch.utils.data import DataLoader
-
-import numpy as np
 import matplotlib.pyplot as plt
-
-
+import numpy as np
+import torch
+from deeptime.decomposition.deep import TAE
+from deeptime.util.data import TrajectoryDataset
+from deeptime.util.torch import MLP
 from sklearn.cluster import KMeans, SpectralClustering
 from sklearn.metrics import silhouette_score
-
-from deeptime.util.torch import MLP
-from deeptime.util.data import TrajectoryDataset
-from deeptime.decomposition.deep import TAE
+from torch.utils.data import DataLoader
 
 from dylightful.utilities import make_name, parse_file_path
 
@@ -144,7 +140,9 @@ def smooth_projection_spectral(arr, num_cluster):
         [type]: [description]
     """
 
-    clf = SpectralClustering(n_clusters=i, affinity="precomputed", n_jobs=-1).fit(proj)
+    clf = SpectralClustering(
+        n_clusters=num_cluster, affinity="precomputed", n_jobs=-1
+    ).fit(proj)
     return clf.labels_
 
 
