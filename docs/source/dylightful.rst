@@ -28,14 +28,6 @@ dylightful.dylightful module
    :undoc-members:
    :show-inheritance:
 
-dylightful.hmm module
----------------------
-
-.. automodule:: dylightful.hmm
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 dylightful.mdanalysis module
 ----------------------------
 
