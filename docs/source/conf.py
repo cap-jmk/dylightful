@@ -33,17 +33,7 @@ release = "0.2.0"
 # ones.
 
 # ones.
-extensions = [
-    "sphinx.ext.autosummary",
-    "sphinx.ext.autodoc",
-    "sphinx.ext.mathjax",
-    "sphinx.ext.viewcode",
-    "sphinx.ext.napoleon",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.extlinks",
-    "sphinx.ext.todo",
-    "nbsphinx",
-]
+extensions = ["sphinx.ext.todo", "sphinx.ext.viewcode", "sphinx.ext.autodoc"]
 
 
 autosummary_generate = True
