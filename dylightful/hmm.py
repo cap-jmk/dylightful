@@ -29,10 +29,7 @@ class HMM_Analyzer:
         self.time_ser = self.load_traj(self.save_path)
 
     def find_states(
-        self,
-        time_ser=None,
-        num_states=None,
-        n_iter=None,
+        self, time_ser=None, num_states=None, n_iter=None,
     ):
         """Computes the probability for finding the states
 

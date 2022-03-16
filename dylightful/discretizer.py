@@ -30,6 +30,8 @@ def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
     plot_ellbow_kmeans(
         metric=sum_of_squared_distances, prefix=prefix, save_path=save_path
     )
+    print("K-Means Convergence")
+    print(sum_of_squared_distances)
     plot_scores_kmeans(metric=scores, prefix=prefix, save_path=save_path)
     return [scores, sum_of_squared_distances]
 
@@ -85,11 +87,7 @@ def tae_discretizer(
     plot_tae_training(tae_model=tae, prefix=prefix, save_path=save_path)
     plot_tae_transform(proj=proj, prefix=prefix, save_path=save_path)
     clustering(
-        proj=proj,
-        prefix=prefix,
-        save_path=save_path,
-        num_cluster=num_cluster,
-        tol=tol,
+        proj=proj, prefix=prefix, save_path=save_path, num_cluster=num_cluster, tol=tol,
     )
     return proj
 
@@ -283,6 +281,7 @@ def find_states_gaussian(proj, prefix, save_path, num_cluster=15, tol=0.01):
 
     bic = np.zeros(num_cluster)
     aic = np.zeros(num_cluster)
+    print("finding ", num_cluster, " states")
     for i in range(2, num_cluster):
         clf = GaussianMixture(n_components=i).fit(proj)
         bic[i] = clf.bic(proj)
