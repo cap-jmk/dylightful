@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Test](https://github.com/MQSchleich/dylightful/actions/workflows/python-app.yaml/badge.svg?branch=main)
 [![codecov](https://codecov.io/gh/simonw/asgi-csrf/branch/main/graph/badge.svg)](https://codecov.io/gh/MQSchleich/dylightful/)
+[![Documentation Status](https://readthedocs.org/projects/dylightful/badge/?version=latest)](https://dylightful.readthedocs.io/en/latest/?badge=latest)
 
 # Package to develop Markov Analysis of Dynophores
 
