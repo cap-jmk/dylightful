@@ -52,9 +52,6 @@ napoleon_use_param = False
 napoleon_use_ivar = True
 
 
-master_doc = "index"
-
-
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
