@@ -26,8 +26,15 @@ To install the necessary packages it is recommended to use the 'conda' package m
 pip install -r requirements.txt
 ```
 
-# Convert Dynophore trajectory 
-use *parser.py*
-```
+# Tutorial 
 
-```
+For a tutorial on how to apply the package to a dynophore check the notebook in [tutorial](https://github.com/MQSchleich/dylightful/tutorial)
+
+For a deep walkthrough checkout the files in [notebooks](https://github.com/MQSchleich/dylightful/notebooks/)
+
+
+# Documentation
+
+The full documentation is on https://dylightful.readthedocs.io/en/latest/
+
+

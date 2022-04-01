@@ -1,3 +1,4 @@
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -106,14 +107,20 @@ def plot_tae_training(tae_model, prefix=None, save_path=None):
     """
     plt.clf()
     plt.cla()
+    plt.tight_layout()
+
     name = "_tae_training.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.semilogy(*tae_model.train_losses.T, label="train")
     plt.semilogy(*tae_model.validation_losses.T, label="validation")
-    plt.xlabel("Training Step")
-    plt.ylabel("Loss")
-    plt.legend()
-    plt.savefig(file_name, dpi=300)
+
+    mpl.rcParams["font.size"] = "50"
+    plt.xlabel("Training Step", fontsize="50")
+    plt.xticks(fontsize="50")
+    plt.ylabel("Loss", fontsize="50")
+    plt.yticks(fontsize="50")
+    plt.legend(fontsize="50")
+    plt.savefig(file_name, dpi=300, bbox_inches="tight")
 
     return None
 
@@ -129,6 +136,8 @@ def plot_tae_transform(proj, num_steps=5000, prefix=None, save_path=None):
     """
     plt.clf()
     plt.cla()
+    plt.tight_layout()
+
     name = "_tae_transform.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.ylabel("State")
@@ -137,8 +146,7 @@ def plot_tae_transform(proj, num_steps=5000, prefix=None, save_path=None):
         plt.plot(proj[:num_steps])
     else:
         plt.plot(proj[:num_steps])
-    plt.legend()
-    plt.savefig(file_name, dpi=300)
+    plt.savefig(file_name, dpi=300, bbox_inches="tight")
 
 
 def plot_scores_kmeans(metric, prefix=None, save_path=None):
@@ -154,14 +162,15 @@ def plot_scores_kmeans(metric, prefix=None, save_path=None):
     """
     plt.clf()
     plt.cla()
+    mpl.rcParams["font.size"] = "50"
+    plt.tight_layout()
     name = "_scores_kmeans.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.xlabel("Number of cluster")
     plt.ylabel("Euclidean Norm $l^2$")
     plt.plot(np.arange(2, len(metric), 1), metric[2:])
     plt.scatter(np.arange(2, len(metric), 1), metric[2:])
-    plt.savefig(file_name, dpi=300)
-    print("Saved", file_name)
+    plt.savefig(file_name, dpi=300, bbox_inches="tight")
     return None
 
 
@@ -180,13 +189,13 @@ def plot_ellbow_kmeans(metric, prefix=None, save_path=None):
     plt.clf()
     plt.cla()
     name = "_ellbow_kMeans.png"
+    mpl.rcParams["font.size"] = "50"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     plt.xlabel("Number of cluster")
     plt.ylabel("Sum of squared distances $R$")
     plt.plot(np.arange(2, len(metric), 1), metric[2:])
     plt.scatter(np.arange(2, len(metric), 1), metric[2:])
-    plt.savefig(file_name, dpi=300)
-    print("Saved", file_name)
+    plt.savefig(file_name, dpi=300, bbox_inches="tight")
     return None
 
 
@@ -223,8 +232,7 @@ def plot_scores_kmeans(metric, prefix=None, save_path=None, name="_scores_kmeans
     plt.ylabel("Euclidean Norm $l^2$")
     plt.plot(np.arange(2, len(metric), 1), metric[2:])
     plt.scatter(np.arange(2, len(metric), 1), metric[2:])
-    plt.savefig(file_name, dpi=300)
-    print("Saved", file_name)
+    plt.savefig(file_name, dpi=300, bbox_inches="tight")
     return None
 
 
@@ -255,7 +263,7 @@ def plot_ellbow_kmeans(
     plt.ylabel(ylabel)
     plt.plot(np.arange(2, len(metric), 1), metric[2:])
     plt.scatter(np.arange(2, len(metric), 1), metric[2:])
-    plt.savefig(file_name, dpi=300)
+    plt.savefig(file_name, dpi=300, bbox_inches="tight")
     print("Saved", file_name)
     return None
 
