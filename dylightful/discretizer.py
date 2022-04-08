@@ -12,7 +12,9 @@ from torch.utils.data import DataLoader
 from dylightful.utilities import make_name, parse_file_path
 
 
-def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
+def find_states_kmeans(
+    proj, prefix, save_path, num_cluster=15, tol=0.01, plotting=True
+):
     """Cluster the projection to get realy discretized values necessary for the MSM
 
     Args:
@@ -27,25 +29,27 @@ def find_states_kmeans(proj, prefix, save_path, num_cluster=15, tol=0.01):
         clf = KMeans(n_clusters=i).fit(proj)
         scores[i] = clf.score(proj)
         sum_of_squared_distances[i] = clf.inertia_
-
-    plot_ellbow_kmeans(
-        metric=sum_of_squared_distances, prefix=prefix, save_path=save_path
-    )
+    if plotting:
+        plot_ellbow_kmeans(
+            metric=sum_of_squared_distances, prefix=prefix, save_path=save_path
+        )
+        plot_scores_kmeans(metric=scores, prefix=prefix, save_path=save_path)
     print("K-Means Convergence")
     print(sum_of_squared_distances)
-    plot_scores_kmeans(metric=scores, prefix=prefix, save_path=save_path)
+
     return [scores, sum_of_squared_distances]
 
 
 def tae_discretizer(
     time_ser,
     num_states,
-    clustering=find_states_kmeans,
+    clustering=None,
     size=3,
     prefix=None,
     save_path=None,
     num_cluster=15,
     tol=0.01,
+    plotting=True,
 ):
     """Test MSM with time lagged autoencoders according to Noé et al.
 
@@ -57,8 +61,11 @@ def tae_discretizer(
         num_cluster (int, optional): Maximal number of MSM states to fit the analysis to. Defaults to 15.
         tol (float, optional): Tolerrance when to stop the clustering to find optimal states. Defaults to 0.01.
     """
-    if num_states > num_cluster // 2:
-        num_cluster = 2 * num_states
+    cluster = False
+    if clustering is not None:
+        if num_states > num_cluster // 2:
+            num_cluster = 2 * num_states
+            cluster = True
     save_path = parse_file_path(save_path)
     num_superfeatures = len(time_ser[0])
     # set_up tae
@@ -85,15 +92,29 @@ def tae_discretizer(
     tae.fit(loader_train, n_epochs=150, validation_loader=loader_val)
     tae_model = tae.fetch_model()
     proj = tae_model.transform(time_ser)
-    plot_tae_training(tae_model=tae, prefix=prefix, save_path=save_path)
-    plot_tae_transform(proj=proj, prefix=prefix, save_path=save_path)
-    clustering(
-        proj=proj,
-        prefix=prefix,
-        save_path=save_path,
-        num_cluster=num_cluster,
-        tol=tol,
-    )
+    if plotting:
+        plot_tae_training(tae_model=tae, prefix=prefix, save_path=save_path)
+        plot_tae_transform(proj=proj, prefix=prefix, save_path=save_path)
+        if cluster == True:
+            clustering(
+                proj=proj,
+                prefix=prefix,
+                save_path=save_path,
+                num_cluster=num_cluster,
+                tol=tol,
+                plotting=True,
+            )
+    else:
+        if cluster == True:
+            clustering(
+                proj=proj,
+                prefix=prefix,
+                save_path=save_path,
+                num_cluster=num_cluster,
+                tol=tol,
+                plotting=True,
+            )
+
     return proj
 
 
@@ -115,6 +136,7 @@ def plot_tae_training(tae_model, prefix=None, save_path=None):
     plt.semilogy(*tae_model.validation_losses.T, label="validation")
 
     mpl.rcParams["font.size"] = "50"
+    plt.rc("axes", labelsize=50)
     plt.xlabel("Training Step", fontsize="50")
     plt.xticks(fontsize="50")
     plt.ylabel("Loss", fontsize="50")
