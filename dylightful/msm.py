@@ -7,6 +7,7 @@ import seaborn as sns
 from deeptime.markov import TransitionCountEstimator
 
 from dylightful.discretizer import smooth_projection_k_means, tae_discretizer
+from dylightful.postprocess import sort_markov_matrix
 from dylightful.utilities import get_dir, make_name
 
 
@@ -44,7 +45,8 @@ def fit_msm(trajectory, prefix=None, save_path=None):
     plt.cla()
     plt.clf()
     estimator, count_matrix, counts = model_msm(trajectory)
-    ax = sns.heatmap(count_matrix)
+
+    ax = sns.heatmap(sort_markov_matrix(count_matrix))
     fig = ax.get_figure()
     name = "_msm_count_matrix.png"
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
@@ -55,7 +57,7 @@ def fit_msm(trajectory, prefix=None, save_path=None):
     file_name = make_name(prefix=prefix, name=name, dir=save_path)
     msm = estimator.fit(counts).fetch_model()
     transition_matrix = msm.transition_matrix
-    ax = sns.heatmap(transition_matrix)
+    ax = sns.heatmap(sort_markov_matrix(transition_matrix))
     fig = ax.get_figure()
     plt.xlabel("State")
     plt.ylabel("State")

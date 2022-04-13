@@ -4,11 +4,7 @@ import mdtraj as md
 
 
 def write_dcd(
-    labels,
-    topology,
-    coordinates,
-    base,
-    prefix=None,
+    labels, topology, coordinates, base, prefix=None,
 ):
     name = "_state_"
     if prefix is not None:
