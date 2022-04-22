@@ -147,7 +147,7 @@ def plot_tae_training(tae_model, prefix=None, save_path=None):
     return None
 
 
-def plot_tae_transform(proj, num_steps=5000, prefix=None, save_path=None):
+def plot_tae_transform(proj, prefix=None, save_path=None):
     """Plots the transformation obtained by the TAE model.
 
     Args:
@@ -156,6 +156,7 @@ def plot_tae_transform(proj, num_steps=5000, prefix=None, save_path=None):
         file_name ([type], optional): [description]. Defaults to None.
         save_path ([type], optional): [description]. Defaults to None.
     """
+    num_steps = len(proj)
     plt.clf()
     plt.cla()
     plt.tight_layout()
@@ -165,9 +166,9 @@ def plot_tae_transform(proj, num_steps=5000, prefix=None, save_path=None):
     plt.ylabel("State")
     plt.xlabel("Frame $t$")
     if num_steps < len(proj):
-        plt.plot(proj[:num_steps])
+        plt.plot(proj[:num_steps], color="black")
     else:
-        plt.plot(proj[:num_steps])
+        plt.plot(proj[:num_steps], color="black")
     plt.savefig(file_name, dpi=300, bbox_inches="tight")
 
 
