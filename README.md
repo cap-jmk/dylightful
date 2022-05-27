@@ -1,5 +1,7 @@
 🟥 Maintance  on GitHub is stopped and all code moves to [Codeberg](https://codeberg.org/sail.black) 🟥 
 
+👉 Code from this repository obtained from GitHub is not licensed and no longer legal to use. 
+
 👉 New repo https://codeberg.org/sail.black/dylightful
 
 
@@ -9,6 +11,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Test](https://github.com/MQSchleich/dylightful/actions/workflows/python-app.yaml/badge.svg?branch=main)
 [![codecov](https://codecov.io/gh/simonw/asgi-csrf/branch/main/graph/badge.svg)](https://codecov.io/gh/MQSchleich/dylightful/)
+
+🟥 Maintance  on GitHub is stopped and all code moves to [Codeberg](https://codeberg.org/sail.black) 🟥 
+
+👉 Code from this repository obtained from GitHub is not licensed and no longer legal to use. 
+
+👉 New repo https://codeberg.org/sail.black/dylightful
+
 
 # Package to develop Markov Analysis of Dynophores
 
