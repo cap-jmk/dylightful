@@ -1,4 +1,4 @@
-🟥 Code is not maintained on GitHub any longer all code moves to [Codeberg](https://codeberg.org/sail.black) 🟥 
+🟥 Maintance  on GitHub is stopped and all code moves to [Codeberg](https://codeberg.org/sail.black) 🟥 
 
 👉 New repo https://codeberg.org/sail.black/dylightful
 
