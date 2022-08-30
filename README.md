@@ -11,6 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Test](https://github.com/MQSchleich/dylightful/actions/workflows/python-app.yaml/badge.svg?branch=main)
 [![codecov](https://codecov.io/gh/simonw/asgi-csrf/branch/main/graph/badge.svg)](https://codecov.io/gh/MQSchleich/dylightful/)
+[![Documentation Status](https://readthedocs.org/projects/dylightful/badge/?version=latest)](https://dylightful.readthedocs.io/en/latest/?badge=latest)
 
 🟥 Maintance  on GitHub is stopped and all code moves to [Codeberg](https://codeberg.org/sail.black) 🟥 
 
@@ -40,8 +41,15 @@ To install the necessary packages it is recommended to use the 'conda' package m
 pip install -r requirements.txt
 ```
 
-# Convert Dynophore trajectory 
-use *parser.py*
-```
+# Tutorial 
 
-```
+For a tutorial on how to apply the package to a dynophore check the notebook in [tutorial](https://github.com/MQSchleich/dylightful/tutorial)
+
+For a deep walkthrough checkout the files in [notebooks](https://github.com/MQSchleich/dylightful/notebooks/)
+
+
+# Documentation
+
+The full documentation is on https://dylightful.readthedocs.io/en/latest/
+
+
